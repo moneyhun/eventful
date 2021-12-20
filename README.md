@@ -29,10 +29,6 @@ See below for an example on simulated data.
 
 ``` r
 library(eventful)
-#> Warning: replacing previous import 'dplyr::filter' by 'stats::filter' when
-#> loading 'eventful'
-#> Warning: replacing previous import 'dplyr::lag' by 'stats::lag' when loading
-#> 'eventful'
 disc_dates    <- lubridate::ymd(c('2020-12-01', '2020-12-31'))
 misrep_dates  <- lubridate::ymd(c('2020-01-01'), '2020-02-01')
 exclude_dates <- unique(c(disc_dates, misrep_dates))

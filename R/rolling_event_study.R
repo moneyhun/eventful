@@ -1,12 +1,21 @@
 #' Rolling Event Study
 #' @author Levi Moneyhun
 #' @importFrom magrittr %>%
-#' @import stats
-#' @import lubridate
-#' @import dplyr
-#' @import purrr
-#' @import tidyr
-#' @import broom
+#' @importFrom lubridate ymd
+#' @importFrom dplyr select
+#' @importFrom dplyr mutate
+#' @importFrom dplyr filter
+#' @importFrom dplyr rename
+#' @importFrom dplyr if_else
+#' @importFrom purrr map
+#' @importFrom purrr map2
+#' @importFrom tidyr unnest
+#' @importFrom tidyr pivot_wider
+#' @importFrom broom glance
+#' @importFrom broom tidy
+#' @importFrom stats update
+#' @importFrom stats predict
+#' @importFrom stats pt
 #' @param formula A formula object describing the regression to be run.  If dummy dates are specified in 'id_dates', they will be added to this formula.
 #' @param data A data.frame object containing the data for the regression and a 'date' variable.
 #' @param pred_date_range A vector of the min and max date for the prediction range.
@@ -16,7 +25,7 @@
 #' @param disc_dates A vector of dates which should be flagged as disclosure dates in the output.  Does not affect the regression models.
 #' @param rolling_window A number specifying the width of the rolling window.  E.g., a window of 50 means that the regression used to predict returns on day i will be fitted on data spanning from day i-50 to day i-1.
 #' @param roll_fixed Either 'observations' or 'window'.  Where excluded dates fall within the rolling window for a given date, this specifies whether the number of observations should remain fixed--meaning the window must be extended--or whether the window should remain fixed--meaning the number of observations will be lower.
-#' @param orth A formual object describing the orthogonalziation which should be applied (e.g., for y ~ x1 + x2, y in the final regression would be replaced by the residual from this regression.)
+#' @param orth A formula object describing the orthogonalziation which should be applied (e.g., for y ~ x1 + x2, y in the final regression would be replaced by the residual from this regression.)
 #' @param p.val_thresh Threshold for flagging residuals as significant.  5% by default.
 #' @param simple TRUE/FALSE indicating whether full output or just 'table' should be returned.  FALSE by default.
 #' @return If simple is FALSE, an list containing a table of event study results, which the regressions themselves as a column, and many other variables of interest relating to the event study.

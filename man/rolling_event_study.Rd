@@ -38,7 +38,7 @@ rolling_event_study(
 
 \item{roll_fixed}{Either 'observations' or 'window'.  Where excluded dates fall within the rolling window for a given date, this specifies whether the number of observations should remain fixed--meaning the window must be extended--or whether the window should remain fixed--meaning the number of observations will be lower.}
 
-\item{orth}{A formual object describing the orthogonalziation which should be applied (e.g., for y ~ x1 + x2, y in the final regression would be replaced by the residual from this regression.)}
+\item{orth}{A formula object describing the orthogonalziation which should be applied (e.g., for y ~ x1 + x2, y in the final regression would be replaced by the residual from this regression.)}
 
 \item{p.val_thresh}{Threshold for flagging residuals as significant.  5\% by default.}
 
