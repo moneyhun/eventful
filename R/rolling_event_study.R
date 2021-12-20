@@ -20,7 +20,8 @@
 #' @param p.val_thresh Threshold for flagging residuals as significant.  5% by default.
 #' @param simple TRUE/FALSE indicating whether full output or just 'table' should be returned.  FALSE by default.
 #' @return If simple is FALSE, an list containing a table of event study results, which the regressions themselves as a column, and many other variables of interest relating to the event study.
-
+#' @export
+#'
 rolling_event_study <- function(
   formula,
   data,
