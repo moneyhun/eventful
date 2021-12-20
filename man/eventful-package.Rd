@@ -4,12 +4,17 @@
 \name{eventful-package}
 \alias{eventful}
 \alias{eventful-package}
-\title{eventful: What the Package Does (One Line, Title Case)}
+\title{eventful: A Simple Pacakge for Rolling-Window Single-Firm Event Studies}
 \description{
-What the package does (one paragraph).
+The goal of eventful is to streamline the process of running single-firm rolling-window event studies. It provides a single function rolling_event_study (for now). This function takes as input a formula, a dataframe, and several additional options (width of rolling window, dates to exclude in estimation, dates for which to generate dummy variables, and more), and returns a nested dataframe structure.
 }
 \author{
-\strong{Maintainer}: First Last \email{first.last@example.com} (\href{https://orcid.org/YOUR-ORCID-ID}{ORCID})
+\strong{Maintainer}: 
+
+Authors:
+\itemize{
+  \item Levi Moneyhun \email{levi.moneyhun@gmail.com}
+}
 
 }
 \keyword{internal}

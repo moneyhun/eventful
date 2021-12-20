@@ -1,10 +1,9 @@
 Package: eventful
-Title: What the Package Does (One Line, Title Case)
+Title: A Simple Pacakge for Rolling-Window Single-Firm Event Studies
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+    person("Levi", "Moneyhun", , "levi.moneyhun@gmail.com", role = c("aut"))
+Description: The goal of eventful is to streamline the process of running single-firm rolling-window event studies. It provides a single function rolling_event_study (for now). This function takes as input a formula, a dataframe, and several additional options (width of rolling window, dates to exclude in estimation, dates for which to generate dummy variables, and more), and returns a nested dataframe structure.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
