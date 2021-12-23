@@ -69,8 +69,7 @@ event_study <- rolling_event_study(
     'bbb_ret' = 'BBB', 
     'ccc_ret' = 'CCC', 
     'ddd_ret' = 'DDD'
-  ), 
-  include_labs = F
+  )
 ))
 ```
 

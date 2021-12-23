@@ -18,7 +18,7 @@ make_resid_plot <- function(
   labels = NULL,
   y_axis_unit = .01,
   y_axis_breaks = 10,
-  x_axis_breaks = 5,
+  x_axis_breaks = 10,
   source = '',
   include_labs = TRUE
 ) {
