@@ -29,6 +29,7 @@ See below for an example on simulated data.
 
 ``` r
 library(eventful)
+set.seed(1)
 disc_dates    <- lubridate::ymd(c('2020-12-01', '2020-12-31'))
 misrep_dates  <- lubridate::ymd(c('2020-01-01'), '2020-02-01')
 exclude_dates <- unique(c(disc_dates, misrep_dates))
@@ -49,7 +50,7 @@ simdata$ddd_ret <-
 simdata$ddd_ret <- 
   ifelse(simdata$date %in% disc_dates, simdata$ddd_ret - .05, simdata$ddd_ret)
 
-event_study <- eventful::rolling_event_study(
+event_study <- rolling_event_study(
   formula = ddd_ret ~ aaa_ret + bbb_ret + ccc_ret,
   data = simdata,
   pred_date_range = lubridate::ymd(c('2020-01-01', '2020-12-31')),
@@ -60,4 +61,17 @@ event_study <- eventful::rolling_event_study(
   orth = ccc_ret ~ aaa_ret + bbb_ret,
   roll_fixed = 'window'
 )
+
+(resid_plot <- make_resid_plot(
+  event_study, 
+  labels = c(
+    'aaa_ret' = 'AAA', 
+    'bbb_ret' = 'BBB', 
+    'ccc_ret' = 'CCC', 
+    'ddd_ret' = 'DDD'
+  ), 
+  include_labs = F
+))
 ```
+
+<img src="README_files/figure-gfm/Example with simulated data-1.png" width="100%" />

@@ -9,12 +9,7 @@
 The goal of eventful is to streamline the process of running single-firm rolling-window event studies. It provides a single function rolling_event_study (for now). This function takes as input a formula, a dataframe, and several additional options (width of rolling window, dates to exclude in estimation, dates for which to generate dummy variables, and more), and returns a nested dataframe structure.
 }
 \author{
-\strong{Maintainer}: 
-
-Authors:
-\itemize{
-  \item Levi Moneyhun \email{levi.moneyhun@gmail.com}
-}
+\strong{Maintainer}: Levi Moneyhun \email{levi.moneyhun@gmail.com}
 
 }
 \keyword{internal}

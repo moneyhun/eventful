@@ -37,85 +37,87 @@ rolling_event_study <- function(
   pred_date_range,
   exclude_dates = NULL,
   id_dates = NULL,
-  misrep_dates = lubridate::ymd(c()),
-  disc_dates = lubridate::ymd(c()),
+  misrep_dates = NULL,
+  disc_dates = NULL,
   rolling_window = NULL,
   roll_fixed = NULL,
   orth = NULL,
   p.val_thresh = .05,
   simple = FALSE
 ) {
-  .event_study <- list()
-  .event_study$formula        <- formula
-  .event_study$data           <- data
-  .event_study$exclude_dates  <- exclude_dates
-  .event_study$id_dates       <- id_dates
-  .event_study$misrep_dates   <- misrep_dates
-  .event_study$disc_dates     <- disc_dates
-  .event_study$rolling_window <- rolling_window
-  .event_study$roll_fixed     <- roll_fixed
-  .event_study$orth           <- orth
-  .event_study$p.val_thresh   <- p.val_thresh
-  .event_study$est_dates      <- data$date
-  .event_study$pred_dates     <- data$date[data$date >= pred_date_range[1] & data$date <= pred_date_range[2]]
+  event_study <- list()
+  event_study$formula        <- formula
+  event_study$data           <- data
+  event_study$exclude_dates  <- exclude_dates
+  event_study$id_dates       <- id_dates
+  event_study$misrep_dates   <- misrep_dates
+  event_study$disc_dates     <- disc_dates
+  event_study$rolling_window <- rolling_window
+  event_study$roll_fixed     <- roll_fixed
+  event_study$orth           <- orth
+  event_study$p.val_thresh   <- p.val_thresh
+  event_study$est_dates      <- data$date
+  event_study$pred_dates     <- data$date[data$date >= pred_date_range[1] & data$date <= pred_date_range[2]]
+  event_study$company        <- formula_to_character(formula)[['lhs']]
+  event_study$controls       <- formula_to_character(formula)[['rhs']]
 
-  if(!is.null(.event_study$orth)) {
-    orth_var <- paste0(as.character(.event_study$orth[[2]]), '_orth')
-    .event_study$orth_reg <- lm(formula = .event_study$orth,
-                                data = .event_study$data)
-    .event_study$data[[orth_var]] <- predict(.event_study$orth_reg)
+  if(!is.null(event_study$orth)) {
+    orth_var <- paste0(as.character(event_study$orth[[2]]), '_orth')
+    event_study$orth_reg <- lm(formula = event_study$orth,
+                                data = event_study$data)
+    event_study$data[[orth_var]] <- predict(event_study$orth_reg)
     formula <- stats::update(formula,
-                             paste("~ . -", as.character(.event_study$orth[[2]]), "+", orth_var))
+                             paste("~ . -", as.character(event_study$orth[[2]]), "+", orth_var))
   }
 
   if (!is.null(id_dates)) {
     id_dates_format <- format(id_dates, '%Y.%m.%d')
     for (i in 1:length(id_dates)) {
-      .event_study$data[[paste0("i",id_dates_format[i])]] <-
-        as.numeric(.event_study$data[['date']] == id_dates[i])
+      event_study$data[[paste0("i",id_dates_format[i])]] <-
+        as.numeric(event_study$data[['date']] == id_dates[i])
 
       formula <- stats::update(formula,
                                paste('~ . +', paste0("i",id_dates_format[i])))
     }
   }
 
-  .event_study$table <- .event_study$data %>%
-    dplyr::filter(date %in% .event_study$pred_dates) %>%
+  event_study$table <- event_study$data %>%
+    dplyr::filter(date %in% event_study$pred_dates) %>%
     dplyr::mutate(
       window_dates = purrr::map(
         .x = date,
         .f = function(
           date,
-          .event_study
+          event_study
         ) {
-          if (.event_study$roll_fixed == 'observations') {
-            est_dates <- .event_study$est_dates[!.event_study$est_dates %in% .event_study$exclude_dates]
+          if (event_study$roll_fixed == 'observations') {
+            est_dates <- event_study$est_dates[!event_study$est_dates %in% event_study$exclude_dates]
           } else {
-            est_dates <- .event_study$est_dates
+            est_dates <- event_study$est_dates
           }
 
           window_end   <- max(which(est_dates < date))
-          window_start <- window_end - (.event_study$rolling_window - 1)
+          window_start <- window_end - (event_study$rolling_window - 1)
           window_dates <- est_dates[window_start:window_end]
-          if (.event_study$roll_fixed == 'window') {
-            window_dates <- window_dates[!window_dates %in% .event_study$exclude_dates]
+          if (event_study$roll_fixed == 'window') {
+            window_dates <- window_dates[!window_dates %in% event_study$exclude_dates]
           }
           return(window_dates)
         },
-        .event_study = .event_study)) %>%
+        event_study = event_study)) %>%
     dplyr::mutate(
       regression = purrr::map2(
         .x = date,
         .y = window_dates,
-        .f = ~ lm(formula = .event_study$formula,
-                  data = .event_study$data %>%
+        .f = ~ lm(formula = event_study$formula,
+                  data = event_study$data %>%
                     dplyr::filter(date %in% .y))
       ),
       pred = purrr::map2(
         .x = regression,
         .y = date,
         .f = ~ stats::predict(regression[[1]],
-                              newdata = .event_study$data %>%
+                              newdata = event_study$data %>%
                                 dplyr::filter(date == .y),
                               se.fit = TRUE) %>%
                 data.frame() %>%
@@ -155,15 +157,15 @@ rolling_event_study <- function(
       resid        = actual - fit,
       stdf         = sqrt(sigma^2 + se.fit^2),
       resid.tstat  = resid / stdf,
-      resid.p.val  = 2 * stats::pt(-abs(resid.tstat), df = df),
-      resid.signif = resid.p.val < .event_study$p.val_thresh,
-      misrep       = dplyr::if_else(date %in% .event_study$misrep_dates, 1, 0),
-      disc         = dplyr::if_else(date %in% .event_study$disc_dates, 1, 0),
+      resid.p.val  = 2 * stats::pt(-abs(resid.tstat), df = df.residual),
+      resid.signif = resid.p.val < event_study$p.val_thresh,
+      misrep       = dplyr::if_else(date %in% event_study$misrep_dates, 1, 0),
+      disc         = dplyr::if_else(date %in% event_study$disc_dates, 1, 0),
     )
 
   if (simple) {
-    return(.event_study$table)
+    return(event_study$table)
   } else {
-    return(.event_study)
+    return(event_study)
   }
 }
