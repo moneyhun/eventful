@@ -79,7 +79,7 @@ make_resid_plot <- function(
                                               accuracy = 1)))
       ),
       alpha = .7,
-      size = 2
+      size = 1.5
     ) +
     ggplot2::geom_point(
       data = event_study$table %>% filter(misrep==1),
@@ -88,7 +88,7 @@ make_resid_plot <- function(
         y = resid,
         shape = 'Alleged Misrepresentation'
       ),
-      size = 5
+      size = 3
     ) +
     ggplot2::geom_point(
       data = event_study$table %>% filter(disc==1),
@@ -97,7 +97,7 @@ make_resid_plot <- function(
         y = resid,
         shape = 'Alleged Disclosure'
       ),
-      size = 5
+      size = 3
     ) +
     ggplot2::scale_y_continuous(
       limits = function(l) {
@@ -168,7 +168,7 @@ make_resid_plot <- function(
       legend.margin  = ggplot2::margin(0,0,2,0, 'mm'),
       axis.title.y   = ggplot2::element_text(size = 9),
       plot.title     = ggplot2::element_text(face = 'bold'),
-      plot.margin    = ggplot2::margin(.35, .35, .35, .35, 'in'),
+      plot.margin    = ggplot2::margin(.25, .25, .25, .25, 'in'),
       plot.caption   = ggplot2::element_text(hjust = 0)
     )
 
