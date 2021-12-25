@@ -32,7 +32,7 @@ devtools::install_github("moneyhun/eventful")
 
 See below for an example on simulated data. 
 
-```{r Example with simulated data, fig.dim = c(7, 4), dpi=144}
+```{r Example with simulated data, fig.dim = c(7, 5), dpi=144}
 library(eventful)
 set.seed(1)
 disc_dates    <- lubridate::ymd(c('2020-12-01', '2020-12-31'))
