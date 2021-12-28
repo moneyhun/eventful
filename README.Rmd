@@ -83,15 +83,13 @@ labels <- c(
 
 (resid_plot <- make_resid_plot(
   event_study, 
-  include_labs = FALSE
+  include_labs = TRUE
 ))
 ```
-4. Generate coefficient plot
+4. Generate coefficient plot, exluding labels. 
 ```{r Generate coefficient plot, fig.dim = c(7, 5), dpi = 144}
 (coef_plot <- make_coef_plot(
   event_study, 
-  source = 'Simulated Data',
-  labels = labels,
-  include_labs = T
+  include_labs = FALSE
 ))
 ```

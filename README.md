@@ -84,19 +84,17 @@ labels <- c(
 
 (resid_plot <- make_resid_plot(
   event_study, 
-  include_labs = FALSE
+  include_labs = TRUE
 ))
 ```
 
 <img src="README_files/figure-gfm/Generate residual plot-1.png" width="100%" />
-4. Generate coefficient plot
+4. Generate coefficient plot, exluding labels.
 
 ``` r
 (coef_plot <- make_coef_plot(
   event_study, 
-  source = 'Simulated Data',
-  labels = labels,
-  include_labs = T
+  include_labs = FALSE
 ))
 ```
 
