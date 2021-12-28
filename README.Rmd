@@ -73,7 +73,7 @@ event_study <- rolling_event_study(
 
 ```
 3. Generate residual plot
-```{r Generate residual plot, fig.dim = c(7, 5), dpi = 144}
+```{r Generate residual plot labels and notes}
 labels <- c(
     'aaa_ret' = 'AAA', 
     'bbb_ret' = 'BBB', 
@@ -81,10 +81,17 @@ labels <- c(
     'ddd_ret' = 'DDD'
   )
 
-(resid_plot <- make_resid_plot(
+resid_plot_notes <- make_resid_plot_notes(
   event_study, 
   labels = labels, 
-  source = 'Simulated Data'
+  source = "Simulated Data"
+)
+```
+
+```{r Create residual plot, fig.dim = c(7, 5), dpi = 144, fig.cap = resid_plot_notes}
+(resid_plot <- make_resid_plot(
+  event_study, 
+  include_labs = FALSE
 ))
 ```
 4. Generate coefficient plot
@@ -92,6 +99,7 @@ labels <- c(
 (coef_plot <- make_coef_plot(
   event_study, 
   source = 'Simulated Data',
-  labels = labels
+  labels = labels,
+  include_labs = T
 ))
 ```

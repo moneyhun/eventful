@@ -22,27 +22,6 @@ make_resid_plot <- function(
   source = '',
   include_labs = TRUE
 ) {
-  if (is.null(labels)) {
-    labels <- c(event_study$company, event_study$controls)
-    names(labels) <- labels
-  }
-
-  names <- list(
-    'company' = labels[[event_study$company]],
-    'controls' = map(
-      event_study$controls,
-      ~ labels[[.x]]
-    )
-  )
-
-  source_str <- ''
-  if (source != '') {source_str <- paste0("Source:  ", source, '\n\n')}
-
-  names$controls_string <- names$controls %>%
-    paste(collapse = "# ") %>%
-    {sub('#([^#]*)$', ', and\\1', .)} %>%
-    {gsub('#', ',', .)}
-
   event_study$table <- event_study$table %>%
     mutate(
       critical_t = qt(1-event_study$p.val_thresh/2, df.residual),
@@ -172,24 +151,26 @@ make_resid_plot <- function(
     )
 
   if(include_labs) {
+    notes <- make_resid_plot_notes(event_study, labels, source)
+
+    if (is.null(labels)) {
+      labels <- c(event_study$company, event_study$controls)
+      names(labels) <- labels
+    }
+
+    names <- list(
+      'company' = labels[[event_study$company]],
+      'controls' = map(
+        event_study$controls,
+        ~ labels[[.x]]
+      )
+    )
+
     plot <- plot +
       ggplot2::labs(
         title = paste0(names$company, " Residual Returns"),
         subtitle = paste0(event_study$rolling_window, "-day Rolling Window Event Study"),
-        caption = paste0(
-          source_str,
-          "(1)  ",
-          names$company,
-          " returns are predicted via linear regression on the previous ",
-          event_study$rolling_window,
-          " days of returns for ",
-          names$controls_string,
-          ".\n",
-          "(2)  Grey shaded area represents the ",
-          100*(1 - event_study$p.val_thresh),
-          "% confidence interval of the predicted returns."
-        ) %>%
-          {gsub("\\.\\.", ".", .)}
+        caption = notes
       )
   }
 

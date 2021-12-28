@@ -2,7 +2,9 @@
 
 export(formula_to_character)
 export(make_coef_plot)
+export(make_coef_plot_notes)
 export(make_resid_plot)
+export(make_resid_plot_notes)
 export(rolling_event_study)
 import(ggplot2)
 import(scales)

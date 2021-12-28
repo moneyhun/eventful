@@ -31,56 +31,6 @@ make_coef_plot <- function(
   include_labs = TRUE,
   confidence_intervals = TRUE
 ) {
-  if (is.null(labels)) {
-    labels <- c(event_study$company, event_study$controls)
-    names(labels) <- labels
-  }
-
-  names <- list(
-    'company' = labels[[event_study$company]],
-    'controls' = map(
-      event_study$controls,
-      ~ labels[[.x]]
-    )
-  )
-
-  source_str <- ''
-  if (source != '') {source_str <- paste0("Source:  ", source, '\n\n')}
-
-  orth_str <- ''
-  if (!is.null(event_study$orth)) {
-   orth_lhs <- formula_to_character(event_study$orth)[['lhs']] %>% {labels[.]}
-   orth_rhs <- formula_to_character(event_study$orth)[['rhs']] %>% {labels[.]}
-
-   orth_rhs_str <- if_else(
-     length(orth_rhs) > 2,
-     orth_rhs %>%
-       paste(collapse = "# ") %>%
-       {sub('#([^#]*)$', ', and\\1', .)} %>%
-       {gsub('#', ',', .)},
-     paste(orth_rhs, collapse = ' and ')
-   )
-
-   orth_str <- paste0(
-     "\n",
-     "(3)  ",
-     orth_lhs,
-     ' returns are orthogonalized against ',
-     orth_rhs_str,
-     ' returns.  '
-   )
-  }
-
-  names$controls_string <-
-    if_else(
-      length(names$controls) > 2,
-      names$controls %>%
-        paste(collapse = "# ") %>%
-        {sub('#([^#]*)$', ', and\\1', .)} %>%
-        {gsub('#', ',', .)},
-      paste(names$controls, collapse = ' and ')
-    )
-
   table_long <- event_study$table %>%
     dplyr::select(
       date,
@@ -150,25 +100,26 @@ make_coef_plot <- function(
   }
 
   if (include_labs) {
+    if (is.null(labels)) {
+      labels <- c(event_study$company, event_study$controls)
+      names(labels) <- labels
+    }
+
+    names <- list(
+      'company' = labels[[event_study$company]],
+      'controls' = map(
+        event_study$controls,
+        ~ labels[[.x]]
+      )
+    )
+
+    notes <- make_coef_plot_notes(event_study, labels, source)
+
     plot <- plot +
       ggplot2::labs(
         title = paste0(names$company, " Event Study Coefficient Estimates"),
         subtitle = paste0(event_study$rolling_window, "-day Rolling Window Event Study"),
-        caption = paste0(
-          source_str,
-          "(1)  ",
-          names$company,
-          " returns are predicted via linear regression on the previous ",
-          event_study$rolling_window,
-          " days of returns for ",
-          names$controls_string,
-          ".\n",
-          "(2)  Shaded areas represents the ",
-          100*(1 - event_study$p.val_thresh),
-          "% confidence intervals of the coefficent estimates.  ",
-          orth_str
-        ) %>%
-          {gsub("\\.\\.", ".", .)}
+        caption = notes
       )
   }
 

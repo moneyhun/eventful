@@ -82,21 +82,35 @@ labels <- c(
     'ddd_ret' = 'DDD'
   )
 
-(resid_plot <- make_resid_plot(
+resid_plot_notes <- make_resid_plot_notes(
   event_study, 
   labels = labels, 
-  source = 'Simulated Data'
+  source = "Simulated Data"
+)
+```
+
+``` r
+(resid_plot <- make_resid_plot(
+  event_study, 
+  include_labs = FALSE
 ))
 ```
 
-<img src="README_files/figure-gfm/Generate residual plot-1.png" width="100%" />
+<img src="README_files/figure-gfm/Create residual plot-1.png" title="Source:  Simulated Data
+
+(1)  DDD returns are predicted via linear regression on the previous 50 days of returns for AAA, BBB, and CCC.
+(2)  Grey shaded area represents the 95% confidence interval of the predicted returns." alt="Source:  Simulated Data
+
+(1)  DDD returns are predicted via linear regression on the previous 50 days of returns for AAA, BBB, and CCC.
+(2)  Grey shaded area represents the 95% confidence interval of the predicted returns." width="100%" />
 4. Generate coefficient plot
 
 ``` r
 (coef_plot <- make_coef_plot(
   event_study, 
   source = 'Simulated Data',
-  labels = labels
+  labels = labels,
+  include_labs = T
 ))
 ```
 
