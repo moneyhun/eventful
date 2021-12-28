@@ -96,13 +96,7 @@ resid_plot_notes <- make_resid_plot_notes(
 ))
 ```
 
-<img src="README_files/figure-gfm/Create residual plot-1.png" title="Source:  Simulated Data
-
-(1)  DDD returns are predicted via linear regression on the previous 50 days of returns for AAA, BBB, and CCC.
-(2)  Grey shaded area represents the 95% confidence interval of the predicted returns." alt="Source:  Simulated Data
-
-(1)  DDD returns are predicted via linear regression on the previous 50 days of returns for AAA, BBB, and CCC.
-(2)  Grey shaded area represents the 95% confidence interval of the predicted returns." width="100%" />
+<img src="README_files/figure-gfm/Create residual plot-1.png" title="resid_plot_notes" alt="resid_plot_notes" width="100%" />
 4. Generate coefficient plot
 
 ``` r

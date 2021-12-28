@@ -88,7 +88,7 @@ resid_plot_notes <- make_resid_plot_notes(
 )
 ```
 
-```{r Create residual plot, fig.dim = c(7, 5), dpi = 144, fig.cap = resid_plot_notes}
+```{r Create residual plot, fig.dim = c(7, 5), dpi = 144, fig.cap = "resid_plot_notes"}
 (resid_plot <- make_resid_plot(
   event_study, 
   include_labs = FALSE
