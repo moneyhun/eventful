@@ -1,4 +1,4 @@
-#' Rolling Event Study
+#' Residual Plot
 #' @author Levi Moneyhun
 #' @import ggplot2
 #' @import scales
@@ -78,7 +78,6 @@ make_resid_plot <- function(
                               scales::percent(event_study$p.val_thresh,
                                               accuracy = 1)))
       ),
-      alpha = .7,
       size = 1.5
     ) +
     ggplot2::geom_point(
@@ -104,10 +103,10 @@ make_resid_plot <- function(
         l[1] <- plyr::round_any(l[1] - .01, y_axis_unit, floor)
         l[2] <- plyr::round_any(l[2] + .01, y_axis_unit, ceiling)
 
-        breaks <- scales::breaks_extended(y_axis_breaks)(l)
+        breaks <- scales::breaks_extended(y_axis_breaks, only.loose = T)(l)
         range(breaks)
       },
-      breaks = scales::breaks_extended(y_axis_breaks),
+      breaks = scales::breaks_extended(y_axis_breaks, only.loose = T),
       labels = scales::label_percent(accuracy = 1),
       expand = ggplot2::expansion(add = .0025)
     ) +
@@ -145,8 +144,8 @@ make_resid_plot <- function(
                                accuracy = 1))
       ),
       values = c(
-        'darkorange',
-        'royalblue4'
+        '#E41A1C',
+        '#377EB8'
       ),
       guide = ggplot2::guide_legend(title = NULL)
     ) +

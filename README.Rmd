@@ -67,13 +67,20 @@ event_study <- rolling_event_study(
   roll_fixed = 'window'
 )
 
-(resid_plot <- make_resid_plot(
-  event_study, 
-  labels = c(
+labels <- c(
     'aaa_ret' = 'AAA', 
     'bbb_ret' = 'BBB', 
     'ccc_ret' = 'CCC', 
     'ddd_ret' = 'DDD'
   )
+
+(resid_plot <- make_resid_plot(
+  event_study, 
+  labels = labels
+))
+
+(coef_plot <- make_coef_plot(
+  event_study, 
+  labels = labels
 ))
 ```

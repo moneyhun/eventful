@@ -62,15 +62,26 @@ event_study <- rolling_event_study(
   roll_fixed = 'window'
 )
 
-(resid_plot <- make_resid_plot(
-  event_study, 
-  labels = c(
+labels <- c(
     'aaa_ret' = 'AAA', 
     'bbb_ret' = 'BBB', 
     'ccc_ret' = 'CCC', 
     'ddd_ret' = 'DDD'
   )
+
+(resid_plot <- make_resid_plot(
+  event_study, 
+  labels = labels
 ))
 ```
 
 <img src="README_files/figure-gfm/Example with simulated data-1.png" width="100%" />
+
+``` r
+(coef_plot <- make_coef_plot(
+  event_study, 
+  labels = labels
+))
+```
+
+<img src="README_files/figure-gfm/Example with simulated data-2.png" width="100%" />
