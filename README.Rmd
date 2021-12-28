@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of `eventful` is to streamline the process of running single-firm rolling-window event studies.  It provides a single function `rolling_event_study` (for now).  This function takes as input a formula, a dataframe, and several additional options (width of rolling window, dates to exclude in estimation, dates for which to generate dummy variables, and more), and returns a nested dataframe structure.  
+The goal of `eventful` is to streamline the process of running single-firm rolling-window event studies.  The package is built around the key function `rolling_event_study`.  This function takes as input a formula, a dataframe, and several additional options (width of rolling window, dates to exclude in estimation, dates for which to generate dummy variables, and more).  It returns a nested dataframe structure with the key results and preserve input options, so that downstream function can be called directly on this result without re-supplying these options.  
 
 ## Installation
 
@@ -32,7 +32,8 @@ devtools::install_github("moneyhun/eventful")
 
 See below for an example on simulated data. 
 
-```{r Example with simulated data, fig.dim = c(7, 5), dpi=144}
+1. Simulate stock return data
+```{r Create simulated data}
 library(eventful)
 set.seed(1)
 disc_dates    <- lubridate::ymd(c('2020-12-01', '2020-12-31'))
@@ -55,6 +56,9 @@ simdata$ddd_ret <-
 simdata$ddd_ret <- 
   ifelse(simdata$date %in% disc_dates, simdata$ddd_ret - .05, simdata$ddd_ret)
 
+```
+2. Run event study model
+```{r Run event study}
 event_study <- rolling_event_study(
   formula = ddd_ret ~ aaa_ret + bbb_ret + ccc_ret,
   data = simdata,
@@ -67,6 +71,9 @@ event_study <- rolling_event_study(
   roll_fixed = 'window'
 )
 
+```
+3. Generate residual plot
+```{r Generate residual plot, fig.dim = c(7, 5), dpi = 144}
 labels <- c(
     'aaa_ret' = 'AAA', 
     'bbb_ret' = 'BBB', 
@@ -79,7 +86,9 @@ labels <- c(
   labels = labels, 
   source = 'Simulated Data'
 ))
-
+```
+4. Generate coefficient plot
+```{r Generate coefficient plot, fig.dim = c(7, 5), dpi = 144}
 (coef_plot <- make_coef_plot(
   event_study, 
   source = 'Simulated Data',

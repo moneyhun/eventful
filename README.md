@@ -7,11 +7,14 @@
 <!-- badges: end -->
 
 The goal of `eventful` is to streamline the process of running
-single-firm rolling-window event studies. It provides a single function
-`rolling_event_study` (for now). This function takes as input a formula,
-a dataframe, and several additional options (width of rolling window,
-dates to exclude in estimation, dates for which to generate dummy
-variables, and more), and returns a nested dataframe structure.
+single-firm rolling-window event studies. The package is built around
+the key function `rolling_event_study`. This function takes as input a
+formula, a dataframe, and several additional options (width of rolling
+window, dates to exclude in estimation, dates for which to generate
+dummy variables, and more). It returns a nested dataframe structure with
+the key results and preserve input options, so that downstream function
+can be called directly on this result without re-supplying these
+options.
 
 ## Installation
 
@@ -26,6 +29,8 @@ devtools::install_github("moneyhun/eventful")
 ## Example
 
 See below for an example on simulated data.
+
+1.  Simulate stock return data
 
 ``` r
 library(eventful)
@@ -49,7 +54,11 @@ simdata$ddd_ret <-
 
 simdata$ddd_ret <- 
   ifelse(simdata$date %in% disc_dates, simdata$ddd_ret - .05, simdata$ddd_ret)
+```
 
+2.  Run event study model
+
+``` r
 event_study <- rolling_event_study(
   formula = ddd_ret ~ aaa_ret + bbb_ret + ccc_ret,
   data = simdata,
@@ -61,7 +70,11 @@ event_study <- rolling_event_study(
   orth = ccc_ret ~ aaa_ret + bbb_ret,
   roll_fixed = 'window'
 )
+```
 
+3.  Generate residual plot
+
+``` r
 labels <- c(
     'aaa_ret' = 'AAA', 
     'bbb_ret' = 'BBB', 
@@ -76,7 +89,8 @@ labels <- c(
 ))
 ```
 
-<img src="README_files/figure-gfm/Example with simulated data-1.png" width="100%" />
+<img src="README_files/figure-gfm/Generate residual plot-1.png" width="100%" />
+4. Generate coefficient plot
 
 ``` r
 (coef_plot <- make_coef_plot(
@@ -86,4 +100,4 @@ labels <- c(
 ))
 ```
 
-<img src="README_files/figure-gfm/Example with simulated data-2.png" width="100%" />
+<img src="README_files/figure-gfm/Generate coefficient plot-1.png" width="100%" />
