@@ -82,21 +82,13 @@ labels <- c(
     'ddd_ret' = 'DDD'
   )
 
-resid_plot_notes <- make_resid_plot_notes(
-  event_study, 
-  labels = labels, 
-  source = "Simulated Data"
-)
-```
-
-``` r
 (resid_plot <- make_resid_plot(
   event_study, 
   include_labs = FALSE
 ))
 ```
 
-<img src="README_files/figure-gfm/Create residual plot-1.png" title="resid_plot_notes" alt="resid_plot_notes" width="100%" />
+<img src="README_files/figure-gfm/Generate residual plot-1.png" width="100%" />
 4. Generate coefficient plot
 
 ``` r
