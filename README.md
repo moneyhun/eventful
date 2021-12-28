@@ -71,7 +71,8 @@ labels <- c(
 
 (resid_plot <- make_resid_plot(
   event_study, 
-  labels = labels
+  labels = labels, 
+  source = 'Simulated Data'
 ))
 ```
 
@@ -80,6 +81,7 @@ labels <- c(
 ``` r
 (coef_plot <- make_coef_plot(
   event_study, 
+  source = 'Simulated Data',
   labels = labels
 ))
 ```

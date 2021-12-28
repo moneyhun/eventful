@@ -115,56 +115,6 @@ make_coef_plot <- function(
     ggplot2::geom_hline(
       ggplot2::aes(yintercept = 0),
       linetype = 'dashed'
-    ) +
-    ggplot2::scale_y_continuous(
-      limits = function(l) {
-        l[1] <- plyr::round_any(l[1] - .01, y_axis_unit, floor)
-        l[2] <- plyr::round_any(l[2] + .01, y_axis_unit, ceiling)
-
-        breaks <- scales::breaks_extended(y_axis_breaks, only.loose = T)(l)
-        range(breaks)
-      },
-      breaks = scales::breaks_extended(y_axis_breaks, only.loose = T),
-      labels = scales::label_number(accuracy = .01),
-      expand = ggplot2::expansion(add = .25 * y_axis_unit)
-    ) +
-    ggplot2::scale_x_date(
-      limits = function(l) {
-        l[1] <- l[1] - lubridate::days((as.integer(round(l[2] - l[1]) * .02)))
-        l[2] <- l[2] + lubridate::days((as.integer(round(l[2] - l[1]) * .02)))
-        l
-      },
-      breaks = function(l) {
-        seq.Date(min(event_study$pred_dates),
-                 max(event_study$pred_dates),
-                 length.out = x_axis_breaks)
-      },
-      labels = function(x) {
-        x_format  <- format(x, '%m/%d/%y')
-        x_split   <- strsplit(x_format, '/')
-        x_trimmed <- lapply(x_split,
-                            function(i) {
-                              i[1:2] <- gsub('^0', '', i[1:2])
-                              i
-                            })
-        x_final   <- unlist(lapply(x_trimmed,
-                                   function(x) {paste(x, collapse = "/")}))
-      },
-      expand = c(0,0)
-    ) +
-    ggplot2::labs(
-      y = "Coefficient Estimate"
-    ) +
-    ggplot2::theme_classic() +
-    ggplot2::theme(
-      legend.position = 'bottom',
-      text = element_text(color = 'black'),
-      axis.title.x   = ggplot2::element_blank(),
-      legend.margin  = ggplot2::margin(0,0,2,0, 'mm'),
-      axis.title.y   = ggplot2::element_text(size = 9),
-      plot.title     = ggplot2::element_text(face = 'bold'),
-      plot.margin    = ggplot2::margin(.25, .25, .25, .25, 'in'),
-      plot.caption   = ggplot2::element_text(hjust = 0)
     )
 
   if (confidence_intervals) {
@@ -176,35 +126,26 @@ make_coef_plot <- function(
           ymin = low,
           ymax = high
         ),
-        alpha = .05,
+        alpha = .1,
         show.legend = FALSE
       ) +
-      ggplot2::geom_ribbon(
+      ggplot2::geom_line(
         ggplot2::aes(
           x = date,
           color = term,
-          ymin = low,
-          ymax = high
+          y = low
         ),
-        fill = NA,
-        alpha = .3,
-        linetype = 'dashed',
+        alpha = .4,
         show.legend = FALSE
       ) +
-      scale_color_brewer(
-        palette = 'Set1',
-        guide = guide_legend(title = NULL,
-                             override.aes = list(fill = NA))
-      ) +
-      scale_fill_brewer(
-        palette = 'Set1',
-        guide = 'none'
-      )
-  } else {
-    plot <- plot  +
-      scale_color_brewer(
-        palette = 'Set1',
-        guide = guide_legend(title = NULL)
+      ggplot2::geom_line(
+        ggplot2::aes(
+          x = date,
+          color = term,
+          y = high
+        ),
+        alpha = .4,
+        show.legend = FALSE
       )
   }
 
@@ -230,6 +171,71 @@ make_coef_plot <- function(
           {gsub("\\.\\.", ".", .)}
       )
   }
+
+  plot <- plot +
+    ggplot2::scale_y_continuous(
+      limits = function(l) {
+        l[1] <- plyr::round_any(l[1] - y_axis_unit, y_axis_unit, floor)
+        l[2] <- plyr::round_any(l[2] + y_axis_unit, y_axis_unit, ceiling)
+
+        breaks <- scales::breaks_extended(y_axis_breaks, only.loose = T)(l)
+        range(breaks)
+      },
+      breaks = scales::breaks_extended(y_axis_breaks, only.loose = T),
+      labels = scales::label_number(accuracy = .01)
+    ) +
+    ggplot2::scale_x_date(
+      limits = function(l) {
+        l[1] <- l[1] - lubridate::days((as.integer(round(l[2] - l[1]) * .02)))
+        l[2] <- l[2] + lubridate::days((as.integer(round(l[2] - l[1]) * .02)))
+        l
+      },
+      breaks = function(l) {
+        seq.Date(min(event_study$pred_dates),
+                 max(event_study$pred_dates),
+                 length.out = x_axis_breaks)
+      },
+      labels = function(x) {
+        x_format  <- format(x, '%m/%d/%y')
+        x_split   <- strsplit(x_format, '/')
+        x_trimmed <- lapply(x_split,
+                            function(i) {
+                              i[1:2] <- gsub('^0', '', i[1:2])
+                              i
+                            })
+        x_final   <- unlist(lapply(x_trimmed,
+                                   function(x) {paste(x, collapse = "/")}))
+      },
+      expand = c(0,0)
+    ) +
+    scale_color_brewer(
+      palette = 'Set1',
+      guide = guide_legend(title = NULL,
+                           override.aes = list(fill = NA)),
+      labels = function(x) {
+        purrr::map(
+          x,
+          ~ ifelse(.x %in% names(labels), labels[[.x]], .x)
+        )
+      }
+    ) +
+    scale_fill_brewer(
+      palette = 'Set1'
+    ) +
+    ggplot2::labs(
+      y = "Coefficient Estimate"
+    ) +
+    ggplot2::theme_classic() +
+    ggplot2::theme(
+      legend.position = 'bottom',
+      text = element_text(color = 'black'),
+      axis.title.x   = ggplot2::element_blank(),
+      legend.margin  = ggplot2::margin(0,0,2,0, 'mm'),
+      axis.title.y   = ggplot2::element_text(size = 9),
+      plot.title     = ggplot2::element_text(face = 'bold'),
+      plot.margin    = ggplot2::margin(.25, .25, .25, .25, 'in'),
+      plot.caption   = ggplot2::element_text(hjust = 0)
+    )
 
   return(plot)
 }
